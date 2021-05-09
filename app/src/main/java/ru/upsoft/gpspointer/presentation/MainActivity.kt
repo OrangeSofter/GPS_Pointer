@@ -6,7 +6,7 @@ import androidx.fragment.app.commit
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.databinding.ActivityMainBinding
-import ru.upsoft.gpspointer.databinding.FragmentMainFunctionalityBinding
+import ru.upsoft.gpspointer.presentation.ui.features.mainFunctionality.MainFunctionalityFragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
