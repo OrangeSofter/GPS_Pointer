@@ -5,9 +5,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.databinding.FragmentMainFunctionalityBinding
 
+@AndroidEntryPoint
 class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality) {
 
     private val viewBinding: FragmentMainFunctionalityBinding by viewBinding(FragmentMainFunctionalityBinding::bind)
@@ -16,7 +18,7 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewBinding.tw.text = viewModel.i.toString()
     }
 
 }
