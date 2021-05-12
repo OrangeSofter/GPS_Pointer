@@ -9,7 +9,7 @@ import ru.upsoft.gpspointer.data.repository.WeatherRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
- interface DataModule {
+interface RepositoryModule {
 
     @Binds
     fun weatherRepository(weatherRepository: WeatherRepositoryImpl): WeatherRepository
