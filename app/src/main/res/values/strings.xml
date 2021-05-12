@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">GPS Pointer</string>
+
+    <string name="ok">ок</string>
+    <string name="attention">Внимание!</string>
+    <string name="cancel">Отмена</string>
+    <string name="settings">Настройки</string>
+
+
+    <!--On permission denied messages-->
+    <string name="fine_location_error_permission_message">Приложению необходим доступ к данным о местоположении устройства.\nПредоставить доступ можно в настройках.</string>
+
+    <string name="google_play_services_error">Приложение не может работать без GooglePlay сервисов </string>
+
 </resources>
