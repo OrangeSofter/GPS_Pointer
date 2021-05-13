@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.collect
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.core.model.LocationFailure
 import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.core.model.WeatherState
 import ru.upsoft.gpspointer.databinding.FragmentMainFunctionalityBinding
 import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
 
@@ -36,6 +37,16 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
                     is LocationState.Failed -> setLocationFailedState(it.failure)
                 }
             }
+            viewModel.weatherSharedFlow.collect {
+                when (it) {
+                    is WeatherState.Success -> {
+                        TransitionManager.beginDelayedTransition(viewBinding.root)
+                        viewBinding.tvWeather.text = "температура ${it.data.main.temp}"
+                        viewBinding.tvWeather.visibility = View.VISIBLE
+                    }
+                    else -> Unit
+                }
+            }
         }
     }
 
@@ -45,8 +56,10 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
 
     private fun setLocationRetrievedState(location: Location) = with(viewBinding) {
         pb.visibility = View.GONE
-        tw.text = "lon: ${location.longitude}\nlat: ${location.latitude}"
-        tw.visibility = View.VISIBLE
+        tvLocation.text = "lon: ${location.longitude}\nlat: ${location.latitude}"
+        tvLocation.visibility = View.VISIBLE
+
+        viewModel.startWeatherMonitoring(location)
     }
 
     private fun setLocationFailedState(failure: LocationFailure) {

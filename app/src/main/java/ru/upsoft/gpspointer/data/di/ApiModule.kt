@@ -1,6 +1,7 @@
 package ru.upsoft.gpspointer.data.di
 
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
@@ -11,8 +12,8 @@ import javax.inject.Named
 @InstallIn(SingletonComponent::class)
 class ApiModule {
 
+    @Provides
     fun provideWeatherApi(@Named("WeatherRetrofit") retrofit: Retrofit): WeatherApi =
         retrofit.create(WeatherApi::class.java)
-
 
 }

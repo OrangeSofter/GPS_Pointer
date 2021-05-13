@@ -17,9 +17,10 @@ object RetrofitModule {
     @Provides
     @Named("WeatherRetrofit")
     fun provideWeatherRetrofit(): Retrofit {
-        Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(WeatherApiConstants.WEATHER_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
 }

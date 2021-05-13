@@ -13,5 +13,4 @@ class WeatherRepositoryImpl @Inject constructor(
         return weatherApi.getWeather(latitude, longitude)
     }
 
-
 }
