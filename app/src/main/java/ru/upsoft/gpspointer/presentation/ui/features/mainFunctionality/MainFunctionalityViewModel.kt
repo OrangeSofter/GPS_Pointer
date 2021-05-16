@@ -26,11 +26,11 @@ class MainFunctionalityViewModel @Inject constructor(
     private lateinit var location: Location
     private var weatherMonitoringJob: Job? = null
 
-    fun startLocationMonitoring() = viewModelScope.launch {
+    fun startLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
         locationUseCase.startLocationMonitoring()
     }
 
-    fun stopLocationMonitoring() = viewModelScope.launch {
+    fun stopLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
         locationUseCase.stopLocationMonitoring()
     }
 

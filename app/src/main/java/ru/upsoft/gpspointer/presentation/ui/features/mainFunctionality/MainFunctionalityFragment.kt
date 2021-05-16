@@ -39,7 +39,8 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
             when (it) {
                 is WeatherState.Success -> {
                     TransitionManager.beginDelayedTransition(viewBinding.root)
-                    viewBinding.tvWeather.text = "температура ${it.data.main.temp}"
+                    viewBinding.tvWeather.text =
+                        "${it.data.weather.last().description}\nскорость ветра ${it.data.wind.speed} м/с"
                     viewBinding.tvWeather.visibility = View.VISIBLE
                 }
                 else -> Unit
@@ -53,7 +54,7 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
 
     private fun setLocationRetrievedState(location: Location) = with(viewBinding) {
         pb.visibility = View.GONE
-        tvLocation.text = "lon: ${location.longitude}\nlat: ${location.latitude}"
+        tvLocation.text = "долгота: ${location.longitude}\nширота: ${location.latitude}"
         tvLocation.visibility = View.VISIBLE
 
         viewModel.startWeatherMonitoring(location)

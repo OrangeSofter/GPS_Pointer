@@ -7,7 +7,7 @@ import ru.upsoft.gpspointer.data.network.model.WeatherNetworkModel
 
 interface WeatherApi {
 
-    @GET("${WeatherApiConstants.WEATHER_BY_COORDINATES_URL}?appid=${WeatherApiConstants.APP_ID}")
+    @GET("${WeatherApiConstants.WEATHER_BY_COORDINATES_URL}?lang=ru&appid=${WeatherApiConstants.APP_ID}")
     fun getWeather(@Query("lat") latitude: Double, @Query("lon") longitude: Double): Call<WeatherNetworkModel>
 
 }
