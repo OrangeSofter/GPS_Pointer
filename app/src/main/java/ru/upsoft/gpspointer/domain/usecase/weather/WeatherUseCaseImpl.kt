@@ -1,7 +1,8 @@
 package ru.upsoft.gpspointer.domain.usecase.weather
 
 import android.location.Location
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import retrofit2.awaitResponse
 import ru.upsoft.gpspointer.core.model.WeatherState
 import ru.upsoft.gpspointer.data.repository.WeatherRepository
 import javax.inject.Inject
@@ -10,17 +11,17 @@ class WeatherUseCaseImpl @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) : WeatherUseCase {
 
-    override val weatherSharedFlow = MutableSharedFlow<WeatherState>()
+    override val weatherStateFlow = MutableStateFlow<WeatherState>(WeatherState.Loading)
 
     override suspend fun getWeather(location: Location) {
-        val response = weatherRepository.getWeather(location.latitude, location.longitude)
+        val response = weatherRepository.getWeather(location.latitude, location.longitude).awaitResponse()
         val data = response.body()
         when {
             response.isSuccessful && data != null ->
-                weatherSharedFlow.emit(
+                weatherStateFlow.emit(
                     WeatherState.Success(data)
                 )
-            else -> weatherSharedFlow.emit(
+            else -> weatherStateFlow.emit(
                 WeatherState.Failed
             )
         }

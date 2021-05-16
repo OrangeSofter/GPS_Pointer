@@ -45,7 +45,7 @@ data class Main(
 
 data class Wind(
 
-    @SerializedName("speed") val speed: Int,
+    @SerializedName("speed") val speed: Float,
     @SerializedName("deg") val deg: Int
 )
 

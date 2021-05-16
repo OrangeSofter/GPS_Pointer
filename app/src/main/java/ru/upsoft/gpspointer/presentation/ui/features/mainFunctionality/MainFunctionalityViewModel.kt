@@ -21,9 +21,9 @@ class MainFunctionalityViewModel @Inject constructor(
 ) : ViewModel() {
 
     val locationStateFlow = locationUseCase.locationStateFlow
-    val weatherSharedFlow = weatherUseCase.weatherSharedFlow
+    val weatherStateFlow = weatherUseCase.weatherStateFlow
 
-    var location: Location? = null
+    private lateinit var location: Location
     private var weatherMonitoringJob: Job? = null
 
     fun startLocationMonitoring() = viewModelScope.launch {
@@ -34,10 +34,10 @@ class MainFunctionalityViewModel @Inject constructor(
         locationUseCase.stopLocationMonitoring()
     }
 
-    fun startWeatherMonitoring(location: Location) {
+    fun startWeatherMonitoring(newLocation: Location) {
+        location = newLocation
         if (weatherMonitoringJob != null) return
         weatherMonitoringJob = viewModelScope.launch(Dispatchers.IO) {
-            this@MainFunctionalityViewModel.location = location
             while (isActive) {
                 weatherUseCase.getWeather(location)
                 delay(TimeUnit.MINUTES.toMillis(5))
