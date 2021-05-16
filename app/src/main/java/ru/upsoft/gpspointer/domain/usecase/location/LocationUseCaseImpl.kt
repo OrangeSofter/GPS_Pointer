@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.domain.usecase
+package ru.upsoft.gpspointer.domain.usecase.location
 
 import android.Manifest
 import android.annotation.SuppressLint

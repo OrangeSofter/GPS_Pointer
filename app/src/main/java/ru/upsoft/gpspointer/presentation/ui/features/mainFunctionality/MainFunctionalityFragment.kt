@@ -7,14 +7,14 @@ import android.transition.TransitionManager
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.core.model.LocationFailure
 import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.core.model.WeatherState
 import ru.upsoft.gpspointer.databinding.FragmentMainFunctionalityBinding
+import ru.upsoft.gpspointer.presentation.common.observeWhenResumed
 import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
 
 @AndroidEntryPoint
@@ -27,14 +27,23 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.locationStateFlow.collect {
-                TransitionManager.beginDelayedTransition(viewBinding.root)
-                when (it) {
-                    is LocationState.Loading -> setLocationLoadingState()
-                    is LocationState.LocationRetrieved -> setLocationRetrievedState(it.location)
-                    is LocationState.Failed -> setLocationFailedState(it.failure)
+        observeWhenResumed(viewModel.locationStateFlow) {
+            TransitionManager.beginDelayedTransition(viewBinding.root)
+            when (it) {
+                is LocationState.Loading -> setLocationLoadingState()
+                is LocationState.LocationRetrieved -> setLocationRetrievedState(it.location)
+                is LocationState.Failed -> setLocationFailedState(it.failure)
+            }
+        }
+        observeWhenResumed(viewModel.weatherStateFlow) {
+            when (it) {
+                is WeatherState.Success -> {
+                    TransitionManager.beginDelayedTransition(viewBinding.root)
+                    viewBinding.tvWeather.text =
+                        "${it.data.weather.last().description}\nскорость ветра ${it.data.wind.speed} м/с"
+                    viewBinding.tvWeather.visibility = View.VISIBLE
                 }
+                else -> Unit
             }
         }
     }
@@ -45,8 +54,10 @@ class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality)
 
     private fun setLocationRetrievedState(location: Location) = with(viewBinding) {
         pb.visibility = View.GONE
-        tw.text = "lon: ${location.longitude}\nlat: ${location.latitude}"
-        tw.visibility = View.VISIBLE
+        tvLocation.text = "долгота: ${location.longitude}\nширота: ${location.latitude}"
+        tvLocation.visibility = View.VISIBLE
+
+        viewModel.startWeatherMonitoring(location)
     }
 
     private fun setLocationFailedState(failure: LocationFailure) {
