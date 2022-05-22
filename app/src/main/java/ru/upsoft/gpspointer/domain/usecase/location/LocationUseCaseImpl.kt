@@ -27,9 +27,8 @@ class LocationUseCaseImpl @Inject constructor(
         LocationServices.getFusedLocationProviderClient(appContext)
     }
     private val locationCallback: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            locationResult ?: return
-            val location = locationResult.lastLocation ?: return
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location = locationResult.lastLocation
             locationStateFlow.value = LocationState.LocationRetrieved(location)
         }
     }
