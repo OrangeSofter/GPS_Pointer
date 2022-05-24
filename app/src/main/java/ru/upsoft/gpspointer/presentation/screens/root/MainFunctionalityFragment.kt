@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.presentation.ui.features.mainFunctionality
+package ru.upsoft.gpspointer.presentation.screens.root
 
 import android.annotation.SuppressLint
 import android.location.Location
@@ -21,7 +21,7 @@ import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
 class MainFunctionalityFragment : Fragment(R.layout.fragment_main_functionality) {
 
     private val viewBinding: FragmentMainFunctionalityBinding by viewBinding(FragmentMainFunctionalityBinding::bind)
-    private val viewModel: MainFunctionalityViewModel by viewModels()
+    private val viewModel: RootViewModel by viewModels()
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

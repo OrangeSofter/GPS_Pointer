@@ -7,16 +7,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.commit
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import ru.upsoft.gpspointer.R
-import ru.upsoft.gpspointer.databinding.ActivityMainBinding
 import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
-import ru.upsoft.gpspointer.presentation.ui.features.mainFunctionality.MainFunctionalityFragment
+import ru.upsoft.gpspointer.presentation.screens.root.RootScreen
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var requestLocation: ActivityResultLauncher<String>
@@ -32,18 +32,13 @@ class MainActivity : ComponentActivity() {
                     )
                     return@registerForActivityResult
                 }
-                setContent { RootScreen() }
+                setContent {
+                    MaterialTheme {
+                        RootScreen()
+                    }
+                }
             }
             requestLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
-
-    @Preview
-    @Composable
-    fun RootScreen() {
-        Column {
-            Text("Мой compose text 1")
-            Text("А это следующий)")
         }
     }
 
