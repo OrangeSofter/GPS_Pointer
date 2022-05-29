@@ -20,15 +20,19 @@ class RootViewModel @Inject constructor(
     private val weatherUseCase: WeatherUseCase,
 ) : ViewModel() {
 
-    init {
-        startLocationMonitoring()
-    }
-
     val locationStateFlow = locationUseCase.locationStateFlow
     val weatherStateFlow = weatherUseCase.weatherStateFlow
 
     private lateinit var location: Location
     private var weatherMonitoringJob: Job? = null
+
+    fun onStart(){
+        startLocationMonitoring()
+    }
+
+    fun onStop(){
+        stopLocationMonitoring()
+    }
 
     fun startLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
         locationUseCase.startLocationMonitoring()

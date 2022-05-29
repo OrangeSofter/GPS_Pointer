@@ -1,15 +1,18 @@
 package ru.upsoft.gpspointer.presentation.screens.root
 
-import android.location.Location
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.upsoft.gpspointer.core.model.Location
 import ru.upsoft.gpspointer.core.model.LocationState
 
 @Preview
@@ -17,21 +20,35 @@ import ru.upsoft.gpspointer.core.model.LocationState
 fun RootScreen(
     viewModel: RootViewModel = viewModel()
 ) {
+    DisposableEffect(key1 = viewModel) {
+        viewModel.onStart()
+        onDispose { viewModel.onStop() }
+    }
     val viewState by viewModel.locationStateFlow.collectAsState()
-    when (viewState) {
-        is LocationState.Failed -> Text("Ошибка")
-        LocationState.Loading -> CircularProgressIndicator()
-        is LocationState.LocationRetrieved -> LocationLoaded((viewState as LocationState.LocationRetrieved).location)
+    Surface(
+        Modifier
+            .fillMaxSize()
+    ) {
+        when (viewState) {
+            is LocationState.Failed -> Text("Ошибка")
+            is LocationState.Loading -> CircularProgressIndicator(Modifier.fillMaxSize())
+            is LocationState.LocationRetrieved -> LocationLoaded((viewState as LocationState.LocationRetrieved).location)
+        }
     }
 }
 
 @Composable
-fun LocationLoaded(location: Location){
-    Surface() {
-        Column {
-            Text("Широта: ${location.latitude}")
-            Text("Долгота: ${location.longitude}")
-        }
+fun LocationLoaded(location: Location) {
+    Column(
+        //Modifier.background(Color.Yellow)
+    ) {
+        Text("Широта: ${location.latitude}")
+        Text("Долгота: ${location.longitude}")
     }
+}
 
+@Composable
+@Preview
+fun PreviewLocationLoaded(){
+    LocationLoaded(location = Location(37.0, 37.0))
 }
