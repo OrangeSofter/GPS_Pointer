@@ -1,7 +1,5 @@
 package ru.upsoft.gpspointer.core.model
 
-import android.location.Location
-
 sealed class LocationState {
     object Loading : LocationState()
     class LocationRetrieved(val location: Location) : LocationState()

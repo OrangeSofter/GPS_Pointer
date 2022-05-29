@@ -11,6 +11,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.upsoft.gpspointer.core.model.Location
 import ru.upsoft.gpspointer.core.model.LocationFailure
 import ru.upsoft.gpspointer.core.model.LocationState
 import ru.upsoft.gpspointer.presentation.common.isGooglePlayServicesAvailable
@@ -27,10 +28,9 @@ class LocationUseCaseImpl @Inject constructor(
         LocationServices.getFusedLocationProviderClient(appContext)
     }
     private val locationCallback: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            locationResult ?: return
-            val location = locationResult.lastLocation ?: return
-            locationStateFlow.value = LocationState.LocationRetrieved(location)
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location = locationResult.lastLocation
+            locationStateFlow.value = LocationState.LocationRetrieved(Location(location.latitude, location.longitude))
         }
     }
 

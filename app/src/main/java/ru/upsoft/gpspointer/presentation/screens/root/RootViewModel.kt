@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.presentation.ui.features.mainFunctionality
+package ru.upsoft.gpspointer.presentation.screens.root
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class MainFunctionalityViewModel @Inject constructor(
+class RootViewModel @Inject constructor(
     private val locationUseCase: LocationUseCase,
     private val weatherUseCase: WeatherUseCase,
 ) : ViewModel() {
@@ -25,6 +25,14 @@ class MainFunctionalityViewModel @Inject constructor(
 
     private lateinit var location: Location
     private var weatherMonitoringJob: Job? = null
+
+    fun onStart(){
+        startLocationMonitoring()
+    }
+
+    fun onStop(){
+        stopLocationMonitoring()
+    }
 
     fun startLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
         locationUseCase.startLocationMonitoring()

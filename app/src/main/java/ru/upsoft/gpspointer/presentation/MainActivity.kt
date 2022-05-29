@@ -2,21 +2,23 @@ package ru.upsoft.gpspointer.presentation
 
 import android.Manifest
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
-import by.kirich1409.viewbindingdelegate.viewBinding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import ru.upsoft.gpspointer.R
-import ru.upsoft.gpspointer.databinding.ActivityMainBinding
 import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
-import ru.upsoft.gpspointer.presentation.ui.features.mainFunctionality.MainFunctionalityFragment
+import ru.upsoft.gpspointer.presentation.screens.root.RootScreen
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : ComponentActivity() {
 
-    private val viewBinding: ActivityMainBinding by viewBinding(ActivityMainBinding::bind)
     private lateinit var requestLocation: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,22 +32,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     )
                     return@registerForActivityResult
                 }
-                /*if(isGooglePlayServicesAvailable())*/ commitMainFunctionalityFragment()
-                /*else showAlertMessageWithoutNegativeButton(
-                    getString(R.string.attention),
-                    getString(R.string.google_play_services_error),
-                    false,
-                    ::finish
-                )*/
+                setContent {
+                    MaterialTheme {
+                        RootScreen()
+                    }
+                }
             }
             requestLocation.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
-
-    private fun commitMainFunctionalityFragment(){
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add(R.id.fragmentContainer, MainFunctionalityFragment(), "mainFuncFrag")
         }
     }
 
