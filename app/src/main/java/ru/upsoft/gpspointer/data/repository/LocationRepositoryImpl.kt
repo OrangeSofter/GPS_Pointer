@@ -7,9 +7,9 @@ import android.os.Looper
 import com.google.android.gms.location.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.upsoft.gpspointer.core.model.Location
-import ru.upsoft.gpspointer.core.model.LocationFailure
-import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.domain.model.Location
+import ru.upsoft.gpspointer.domain.model.LocationFailure
+import ru.upsoft.gpspointer.domain.model.LocationState
 import ru.upsoft.gpspointer.domain.repository.LocationRepository
 import ru.upsoft.gpspointer.presentation.common.isGooglePlayServicesAvailable
 import ru.upsoft.gpspointer.presentation.common.permissionIsGranted

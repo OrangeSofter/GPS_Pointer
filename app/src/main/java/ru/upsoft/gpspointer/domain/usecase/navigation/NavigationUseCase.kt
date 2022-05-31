@@ -1,14 +1,17 @@
 package ru.upsoft.gpspointer.domain.usecase.navigation
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.domain.model.CompassState
+import ru.upsoft.gpspointer.domain.model.LocationState
 
 interface NavigationUseCase {
 
     val locationStateFlow: StateFlow<LocationState>
 
-    fun startLocationMonitoring()
+    val compassStateFlow: StateFlow<CompassState>
 
-    fun stopLocationMonitoring()
+    fun startNavigationMonitoring()
+
+    fun stopNavigationMonitoring()
 
 }

@@ -31,11 +31,11 @@ class RootViewModel @Inject constructor(
     }
 
     fun startLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
-        navigationUseCase.startLocationMonitoring()
+        navigationUseCase.startNavigationMonitoring()
     }
 
     fun stopLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
-        navigationUseCase.stopLocationMonitoring()
+        navigationUseCase.stopNavigationMonitoring()
     }
 
     fun startWeatherMonitoring(newLocation: Location) {

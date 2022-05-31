@@ -4,8 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.upsoft.gpspointer.data.repository.CompassRepositoryImpl
 import ru.upsoft.gpspointer.data.repository.LocationRepositoryImpl
 import ru.upsoft.gpspointer.data.repository.WeatherRepositoryImpl
+import ru.upsoft.gpspointer.domain.repository.CompassRepository
 import ru.upsoft.gpspointer.domain.repository.LocationRepository
 import ru.upsoft.gpspointer.domain.repository.WeatherRepository
 
@@ -18,6 +20,9 @@ interface RepositoryModule {
 
     @Binds
     fun locationRepository(locationRepository: LocationRepositoryImpl): LocationRepository
+
+    @Binds
+    fun compassRepository(compassRepository: CompassRepositoryImpl): CompassRepository
 
 
 }

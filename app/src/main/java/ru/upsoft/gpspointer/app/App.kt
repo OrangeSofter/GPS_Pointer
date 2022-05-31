@@ -2,7 +2,7 @@ package ru.upsoft.gpspointer.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import ru.upsoft.gpspointer.core.common.sendLog
+import ru.upsoft.gpspointer.common.sendLog
 
 @HiltAndroidApp
 class App: Application() {

@@ -12,8 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.upsoft.gpspointer.core.model.Location
-import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.domain.model.Location
+import ru.upsoft.gpspointer.domain.model.LocationState
 
 @Preview
 @Composable

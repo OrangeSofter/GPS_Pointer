@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.core.model
+package ru.upsoft.gpspointer.domain.model
 
 sealed class LocationState {
     object Loading : LocationState()

@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.core.model
+package ru.upsoft.gpspointer.domain.model
 
 import ru.upsoft.gpspointer.data.network.model.WeatherNetworkModel
 
