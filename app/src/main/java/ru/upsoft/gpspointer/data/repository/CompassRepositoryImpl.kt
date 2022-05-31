@@ -10,7 +10,7 @@ import javax.inject.Inject
 class CompassRepositoryImpl @Inject constructor(
 
 ) : CompassRepository {
-    private val _compassStateFlow = MutableStateFlow(CompassState.Loaded(0.0))
+    private val _compassStateFlow = MutableStateFlow(CompassState.Loaded(0f))
 
     override val compassStateFlow: StateFlow<CompassState> = _compassStateFlow.asStateFlow()
 

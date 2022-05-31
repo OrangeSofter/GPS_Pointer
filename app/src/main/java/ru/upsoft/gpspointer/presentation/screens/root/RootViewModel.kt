@@ -17,6 +17,7 @@ class RootViewModel @Inject constructor(
 ) : ViewModel() {
 
     val locationStateFlow = navigationUseCase.locationStateFlow
+    val compassState = navigationUseCase.compassStateFlow
     val weatherStateFlow = weatherUseCase.weatherStateFlow
 
     private lateinit var location: Location
