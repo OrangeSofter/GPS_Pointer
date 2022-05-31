@@ -31,7 +31,7 @@ fun RootScreen(
     ) {
         when (viewState) {
             is LocationState.Failed -> Text("Ошибка")
-            is LocationState.Loading -> CircularProgressIndicator(Modifier.fillMaxSize())
+            is LocationState.Loading -> CircularProgressIndicator()
             is LocationState.LocationRetrieved -> LocationLoaded((viewState as LocationState.LocationRetrieved).location)
         }
     }

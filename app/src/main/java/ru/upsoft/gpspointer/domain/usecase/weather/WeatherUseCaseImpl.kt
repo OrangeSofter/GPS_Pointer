@@ -4,7 +4,7 @@ import android.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.awaitResponse
 import ru.upsoft.gpspointer.core.model.WeatherState
-import ru.upsoft.gpspointer.data.repository.WeatherRepository
+import ru.upsoft.gpspointer.domain.repository.WeatherRepository
 import javax.inject.Inject
 
 class WeatherUseCaseImpl @Inject constructor(
