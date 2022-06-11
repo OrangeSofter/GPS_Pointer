@@ -62,7 +62,7 @@ fun Compass(state: CompassState) {
                 contentDescription = "Compass area",
                 modifier = Modifier
                     .size(200.dp)
-                    .rotate(state.degree)
+                    .rotate(-state.degree)
             )
             Image(
                 painter = painterResource(id = R.drawable.compass_arrow),
@@ -70,6 +70,8 @@ fun Compass(state: CompassState) {
                 modifier = Modifier.size(200.dp)
             )
         }
+        is CompassState.Failed -> {}
+        is CompassState.Initial -> {}
     }
 }
 
