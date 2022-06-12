@@ -56,19 +56,24 @@ fun RootScreen(
 @Composable
 fun Compass(state: CompassState) {
     when (state) {
-        is CompassState.Loaded -> Surface {
-            Image(
-                painter = painterResource(id = R.drawable.compass_area),
-                contentDescription = "Compass area",
-                modifier = Modifier
-                    .size(200.dp)
-                    .rotate(-state.degree)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.compass_arrow),
-                contentDescription = "Compass arrow",
-                modifier = Modifier.size(200.dp)
-            )
+        is CompassState.Loaded -> Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Surface {
+                Image(
+                    painter = painterResource(id = R.drawable.compass_area),
+                    contentDescription = "Compass area",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .rotate(-state.degree)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.compass_arrow),
+                    contentDescription = "Compass arrow",
+                    modifier = Modifier.size(200.dp)
+                )
+            }
+            Text("${state.degree.toInt()}")
         }
         is CompassState.Failed -> {}
         is CompassState.Initial -> {}
