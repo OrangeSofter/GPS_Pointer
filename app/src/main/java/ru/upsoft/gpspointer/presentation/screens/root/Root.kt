@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +26,7 @@ import ru.upsoft.gpspointer.presentation.Routes
 @Composable
 fun RootScreen(
     viewModel: RootViewModel,
+    selectedPointName: String?,
     navController: NavController,
 ) {
     DisposableEffect(key1 = viewModel) {
@@ -46,6 +44,9 @@ fun RootScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Compass(compassState)
+            selectedPointName?.let {
+                Text("Выбранная точка $it", color = MaterialTheme.colors.error)
+            }
             when (locationState) {
                 is LocationState.Failed -> Text("Ошибка")
                 is LocationState.Loading -> CircularProgressIndicator()
