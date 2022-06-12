@@ -28,13 +28,18 @@ fun RootScreen(
     viewModel: RootViewModel,
     navController: NavController,
 ) {
-    DisposableEffect(key1 = viewModel) {
+    DisposableEffect(viewModel) {
         viewModel.onStart()
         onDispose { viewModel.onStop() }
     }
     val selectedPointName: String? = navController.currentBackStackEntry?.savedStateHandle?.get("selectedPointName")
+    DisposableEffect(selectedPointName) {
+        viewModel.onSelectPoint(selectedPointName)
+        onDispose { }
+    }
     val locationState by viewModel.locationStateFlow.collectAsState()
     val compassState by viewModel.compassState.collectAsState()
+    //val targetGeoPointState
     Surface(
         Modifier
             .fillMaxSize()

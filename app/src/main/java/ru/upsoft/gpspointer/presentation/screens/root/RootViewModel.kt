@@ -23,19 +23,23 @@ class RootViewModel @Inject constructor(
     private lateinit var location: Location
     private var weatherMonitoringJob: Job? = null
 
-    fun onStart(){
+    fun onStart() {
         startLocationMonitoring()
     }
 
-    fun onStop(){
+    fun onStop() {
         stopLocationMonitoring()
     }
 
-    fun startLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
+    fun onSelectPoint(pointName: String?) = viewModelScope.launch {
+        navigationUseCase.onSelectPoint(pointName)
+    }
+
+    fun startLocationMonitoring() = viewModelScope.launch {
         navigationUseCase.startNavigationMonitoring()
     }
 
-    fun stopLocationMonitoring() = viewModelScope.launch(Dispatchers.IO) {
+    fun stopLocationMonitoring() = viewModelScope.launch {
         navigationUseCase.stopNavigationMonitoring()
     }
 
