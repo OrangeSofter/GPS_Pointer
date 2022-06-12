@@ -6,9 +6,13 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import ru.upsoft.gpspointer.domain.model.CompassFailure
 import ru.upsoft.gpspointer.domain.model.CompassState
 import ru.upsoft.gpspointer.domain.repository.CompassRepository
@@ -21,7 +25,10 @@ class CompassRepositoryImpl @Inject constructor(
 
     override val compassStateFlow: StateFlow<CompassState> = _compassStateFlow.asStateFlow()
 
+    private val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+    private val lock = Object()
 
     private var gravityParams = FloatArray(3)
     private var magneticParams = FloatArray(3)
@@ -32,8 +39,8 @@ class CompassRepositoryImpl @Inject constructor(
 
     private val magneticSensorListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
-            magneticParams = event.values
-            updateDegree()
+            magneticParams = event.values.clone()
+            coroutineScope.launch { updateDegree() }
         }
 
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -42,15 +49,15 @@ class CompassRepositoryImpl @Inject constructor(
 
     private val accelerometerSensorListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
-            gravityParams = event.values
-            updateDegree()
+            gravityParams = event.values.clone()
+            coroutineScope.launch { updateDegree() }
         }
 
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
     }
 
-    private fun updateDegree() {
+    private fun updateDegree() = synchronized(lock) {
         SensorManager.getRotationMatrix(rotationMatrix, null, gravityParams, magneticParams)
         SensorManager.getOrientation(rotationMatrix, orientationParams)
         val degree = (orientationParams.first() * 180 / Math.PI).toFloat()
@@ -66,11 +73,15 @@ class CompassRepositoryImpl @Inject constructor(
             _compassStateFlow.value = CompassState.Failed(CompassFailure.HAVE_NOT_SENSOR)
             return
         }
-        sensorManager.registerListener(magneticSensorListener, magneticSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(
+            magneticSensorListener,
+            magneticSensor,
+            SensorManager.SENSOR_DELAY_GAME
+        )
         sensorManager.registerListener(
             accelerometerSensorListener,
             accelerometerSensor,
-            SensorManager.SENSOR_DELAY_NORMAL
+            SensorManager.SENSOR_DELAY_GAME
         )
     }
 
