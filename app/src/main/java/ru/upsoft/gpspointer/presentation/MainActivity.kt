@@ -6,15 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.presentation.common.showErrorPermissionMessage
-import ru.upsoft.gpspointer.presentation.screens.root.RootScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -34,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 }
                 setContent {
                     MaterialTheme {
-                        RootScreen()
+                        AppNavHost()
                     }
                 }
             }

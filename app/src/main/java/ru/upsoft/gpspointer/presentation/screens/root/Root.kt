@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -18,16 +19,17 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.domain.model.CompassState
 import ru.upsoft.gpspointer.domain.model.Location
 import ru.upsoft.gpspointer.domain.model.LocationState
+import ru.upsoft.gpspointer.presentation.Routes
 
-@Preview
 @Composable
 fun RootScreen(
-    viewModel: RootViewModel = viewModel()
+    viewModel: RootViewModel,
+    navController: NavController,
 ) {
     DisposableEffect(key1 = viewModel) {
         viewModel.onStart()
@@ -49,6 +51,11 @@ fun RootScreen(
                 is LocationState.Loading -> CircularProgressIndicator()
                 is LocationState.LocationRetrieved -> LocationLoaded((locationState as LocationState.LocationRetrieved).location)
             }
+            Button(
+                onClick = {
+                    navController.navigate(Routes.POINTS)
+                }
+            ) { Text("К точкам") }
         }
     }
 }
