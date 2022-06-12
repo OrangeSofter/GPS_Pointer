@@ -1,27 +1,23 @@
-package ru.upsoft.gpspointer.domain.usecase.location
+package ru.upsoft.gpspointer.data.repository
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.upsoft.gpspointer.core.model.Location
-import ru.upsoft.gpspointer.core.model.LocationFailure
-import ru.upsoft.gpspointer.core.model.LocationState
+import ru.upsoft.gpspointer.domain.model.Location
+import ru.upsoft.gpspointer.domain.model.LocationFailure
+import ru.upsoft.gpspointer.domain.model.LocationState
+import ru.upsoft.gpspointer.domain.repository.LocationRepository
 import ru.upsoft.gpspointer.presentation.common.isGooglePlayServicesAvailable
 import ru.upsoft.gpspointer.presentation.common.permissionIsGranted
 import javax.inject.Inject
 
-class LocationUseCaseImpl @Inject constructor(
+class LocationRepositoryImpl @Inject constructor(
     @ApplicationContext private val appContext: Context
-) : LocationUseCase {
-
+) : LocationRepository {
     override val locationStateFlow = MutableStateFlow<LocationState>(LocationState.Loading)
 
     private val fusedLocationClient: FusedLocationProviderClient by lazy {
@@ -44,7 +40,7 @@ class LocationUseCaseImpl @Inject constructor(
             locationStateFlow.value = LocationState.Failed(LocationFailure.GMS_UNAVAILABLE)
             return
         }
-        fusedLocationClient.requestLocationUpdates(
+        fusedLocationClient.requestLocationUpdates(//Todo: Ускорить определение местоположения + лупер на фоновом потоке
             LocationRequest.create(),
             locationCallback,
             Looper.getMainLooper()

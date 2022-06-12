@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.data.repository
+package ru.upsoft.gpspointer.domain.repository
 
 import retrofit2.Call
 import ru.upsoft.gpspointer.data.network.model.WeatherNetworkModel

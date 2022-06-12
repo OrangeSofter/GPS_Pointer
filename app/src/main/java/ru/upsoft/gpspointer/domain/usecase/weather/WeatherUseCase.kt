@@ -2,7 +2,7 @@ package ru.upsoft.gpspointer.domain.usecase.weather
 
 import android.location.Location
 import kotlinx.coroutines.flow.StateFlow
-import ru.upsoft.gpspointer.core.model.WeatherState
+import ru.upsoft.gpspointer.domain.model.WeatherState
 
 interface WeatherUseCase {
 

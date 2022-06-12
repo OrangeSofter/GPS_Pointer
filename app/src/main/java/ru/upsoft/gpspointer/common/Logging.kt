@@ -1,4 +1,4 @@
-package ru.upsoft.gpspointer.core.common
+package ru.upsoft.gpspointer.common
 
 import android.util.Log
 import ru.upsoft.gpspointer.BuildConfig
