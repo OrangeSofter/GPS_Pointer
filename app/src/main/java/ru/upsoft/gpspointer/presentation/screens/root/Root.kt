@@ -26,13 +26,13 @@ import ru.upsoft.gpspointer.presentation.Routes
 @Composable
 fun RootScreen(
     viewModel: RootViewModel,
-    selectedPointName: String?,
     navController: NavController,
 ) {
     DisposableEffect(key1 = viewModel) {
         viewModel.onStart()
         onDispose { viewModel.onStop() }
     }
+    val selectedPointName: String? = navController.currentBackStackEntry?.savedStateHandle?.get("selectedPointName")
     val locationState by viewModel.locationStateFlow.collectAsState()
     val compassState by viewModel.compassState.collectAsState()
     Surface(

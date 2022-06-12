@@ -10,15 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ru.upsoft.gpspointer.domain.model.GeoPoint
-import ru.upsoft.gpspointer.presentation.Routes
 
 @Composable
-@Preview
 fun PointsScreen(
     viewModel: PointsViewModel = viewModel(),
     navController: NavController,
@@ -36,9 +33,8 @@ fun PointsScreen(
                 LazyColumn {
                     items(points.value, key = { it.name }) { point ->
                         PointItem(point) {
-                            navController.navigate(
-                                "${Routes.ROOT}?selectedPoint=${point.name}",
-                            )
+                            navController.previousBackStackEntry?.savedStateHandle?.set("selectedPointName", point.name)
+                            navController.popBackStack()
                         }
                     }
                 }
