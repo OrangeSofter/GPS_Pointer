@@ -1,27 +1,38 @@
 package ru.upsoft.gpspointer.data.repository
 
+import android.content.Context
+import androidx.room.Room
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import ru.upsoft.gpspointer.data.database.AppDatabase
+import ru.upsoft.gpspointer.data.mapper.toDomainModel
+import ru.upsoft.gpspointer.data.mapper.toEntity
 import ru.upsoft.gpspointer.domain.model.GeoPoint
-import ru.upsoft.gpspointer.domain.model.Location
 import ru.upsoft.gpspointer.domain.repository.GeoPointsRepository
 import javax.inject.Inject
 
 class GeoPointsRepositoryImpl @Inject constructor(
+    @ApplicationContext context: Context
+) : GeoPointsRepository {//Todo: стоит ли выносить в другой дисретчер корутин
 
-) : GeoPointsRepository {
+    private val db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "app-db"
+    ).build()
 
-    override suspend fun safePoint(point: GeoPoint) {
-        TODO("Not yet implemented")
+    private val dao = db.pointsDao()
+
+    override suspend fun safePoint(point: GeoPoint) = withContext(Dispatchers.IO)  {
+        val entity = point.toEntity()
+        dao.insert(entity)
     }
 
-    override suspend fun deletePoint(pointName: String) {
-        TODO("Not yet implemented")
+    override suspend fun deletePoint(pointName: String) = withContext(Dispatchers.IO)  {
+        dao.deleteByName(pointName)
     }
 
-    override suspend fun loadPoints(): List<GeoPoint> {
-        return listOf(
-            GeoPoint("точка 1", Location(48.0, 48.0)),
-            GeoPoint("точка 2", Location(49.0, 49.0)),
-            GeoPoint("точка 3", Location(50.0, 51.0)),
-        )
+    override suspend fun loadPoints(): List<GeoPoint> = withContext(Dispatchers.IO) {
+        return@withContext dao.getAll().toDomainModel()
     }
 }
