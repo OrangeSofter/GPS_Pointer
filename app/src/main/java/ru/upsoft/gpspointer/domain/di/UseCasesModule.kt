@@ -14,7 +14,7 @@ import ru.upsoft.gpspointer.domain.usecase.weather.WeatherUseCaseImpl
 interface UseCasesModule {
 
     @Binds
-    fun locationUseCase(locationUseCase: NavigationUseCaseImpl): NavigationUseCase
+    fun navigationUseCase(locationUseCase: NavigationUseCaseImpl): NavigationUseCase
 
     @Binds
     fun weatherUseCase(weatherUseCase: WeatherUseCaseImpl): WeatherUseCase

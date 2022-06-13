@@ -21,6 +21,7 @@ import ru.upsoft.gpspointer.R
 import ru.upsoft.gpspointer.domain.model.CompassState
 import ru.upsoft.gpspointer.domain.model.Location
 import ru.upsoft.gpspointer.domain.model.LocationState
+import ru.upsoft.gpspointer.domain.model.SelectedPointState
 import ru.upsoft.gpspointer.presentation.Routes
 
 @Composable
@@ -39,7 +40,7 @@ fun RootScreen(
     }
     val locationState by viewModel.locationStateFlow.collectAsState()
     val compassState by viewModel.compassState.collectAsState()
-    //val targetGeoPointState
+    val selectedPointState by viewModel.selectedPointState.collectAsState()
     Surface(
         Modifier
             .fillMaxSize()
@@ -49,9 +50,7 @@ fun RootScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Compass(compassState)
-            selectedPointName?.let {
-                Text("Выбранная точка $it", color = MaterialTheme.colors.error)
-            }
+            selectedPointState?.let { SelectedPoint(it) }
             when (locationState) {
                 is LocationState.Failed -> Text("Ошибка")
                 is LocationState.Loading -> CircularProgressIndicator()
@@ -91,6 +90,22 @@ fun Compass(state: CompassState) {
         is CompassState.Failed -> {}
         is CompassState.Initial -> {}
     }
+}
+
+@Composable
+fun SelectedPoint(state: SelectedPointState) {
+    Column {
+        Image(
+            painter = painterResource(id = R.drawable.point_arrow),
+            contentDescription = "Compass area",
+            modifier = Modifier
+                .size(50.dp)
+                .rotate(state.degreeToPoint)
+        )
+        Text(state.selectedPoint.name, color = MaterialTheme.colors.primary)
+        Text("${state.kilometersToPoint}км", color = MaterialTheme.colors.primary)
+    }
+
 }
 
 @Composable

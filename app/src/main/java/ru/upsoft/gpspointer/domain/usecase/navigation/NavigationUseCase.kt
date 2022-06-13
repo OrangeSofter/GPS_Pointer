@@ -1,14 +1,12 @@
 package ru.upsoft.gpspointer.domain.usecase.navigation
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
-import ru.upsoft.gpspointer.domain.model.CompassState
-import ru.upsoft.gpspointer.domain.model.LocationState
-import ru.upsoft.gpspointer.domain.model.SelectedPointState
+import ru.upsoft.gpspointer.domain.model.*
 import ru.upsoft.gpspointer.domain.repository.CompassRepository
 import ru.upsoft.gpspointer.domain.repository.GeoPointsRepository
 import ru.upsoft.gpspointer.domain.repository.LocationRepository
@@ -20,7 +18,7 @@ interface NavigationUseCase {
 
     val compassStateFlow: StateFlow<CompassState>
 
-    val selectedPointState: StateFlow<SelectedPointState?>
+    val selectedPointState: Flow<SelectedPointState?>
 
     fun startNavigationMonitoring()
 
@@ -39,8 +37,19 @@ class NavigationUseCaseImpl @Inject constructor(
     override val locationStateFlow = locationRepository.locationStateFlow
 
     override val compassStateFlow = compassRepository.compassStateFlow
-    private val _selectedPointState = MutableStateFlow<SelectedPointState?>(null)
-    override val selectedPointState = _selectedPointState.asStateFlow()
+
+    private val selectedGeoPoint = MutableStateFlow<GeoPoint?>(null)
+    override val selectedPointState = combine(
+        selectedGeoPoint,
+        locationStateFlow,
+        compassStateFlow
+    ) { selectedPoint, locationState, compassState ->
+        calculateSelectedPointState(
+            selectedPoint,
+            (locationState as? LocationState.LocationRetrieved)?.location,
+            (compassState as? CompassState.Loaded)?.degree,
+        )
+    }
 
     override fun startNavigationMonitoring() {
         locationRepository.startLocationMonitoring()
@@ -52,25 +61,27 @@ class NavigationUseCaseImpl @Inject constructor(
         compassRepository.stopCompass()
     }
 
-    override suspend fun onSelectPoint(pointName: String?) = withContext(Dispatchers.Default) {
+    override suspend fun onSelectPoint(pointName: String?) {
         val points = geoPointsRepository.loadPoints()
         val selectedPoint = points.firstOrNull { it.name == pointName }
-        if (selectedPoint == null) {
-            _selectedPointState.value = null
-            return@withContext
-        }
-        val currentLocation = (locationStateFlow
-            .first { it is LocationState.LocationRetrieved } as LocationState.LocationRetrieved)
-            .location
+        selectedGeoPoint.value = selectedPoint
+    }
 
-        val degreeToPoint = currentLocation.calculateDegrees(selectedPoint.location)
+    private suspend fun calculateSelectedPointState(
+        selectedPoint: GeoPoint?,
+        currentLocation: Location?,
+        compassDegree: Float?
+    ): SelectedPointState? = withContext(Dispatchers.Default) {
+        if (selectedPoint == null || currentLocation == null || compassDegree == null) {
+            return@withContext null
+        }
+        val degreeToPoint = currentLocation.calculateDegrees(selectedPoint.location) - compassDegree
         val distanceToPoint = currentLocation.calculateKilometersDistance(selectedPoint.location)
-        _selectedPointState.value = SelectedPointState(
+        return@withContext SelectedPointState(
             selectedPoint = selectedPoint,
             degreeToPoint = degreeToPoint,
             kilometersToPoint = distanceToPoint,
         )
-
     }
 
 }
