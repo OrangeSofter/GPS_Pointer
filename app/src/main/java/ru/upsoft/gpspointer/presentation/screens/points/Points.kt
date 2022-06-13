@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ru.upsoft.gpspointer.domain.model.GeoPoint
 
 @Composable
 fun PointsScreen(
-    viewModel: PointsViewModel = viewModel(),
+    viewModel: PointsViewModel,
     navController: NavController,
 ) {
     val points = viewModel.pointsStateFlow.collectAsState()

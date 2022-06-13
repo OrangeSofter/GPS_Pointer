@@ -1,23 +1,34 @@
 package ru.upsoft.gpspointer.presentation.screens.points
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import ru.upsoft.gpspointer.domain.model.GeoPoint
-import ru.upsoft.gpspointer.domain.model.Location
+import ru.upsoft.gpspointer.domain.repository.GeoPointsRepository
+import javax.inject.Inject
 
 
-class PointsViewModel : ViewModel() {
+@HiltViewModel
+class PointsViewModel @Inject constructor(
+    private val geoPointsRepository: GeoPointsRepository
+) : ViewModel() {
 
-    val pointsStateFlow: StateFlow<List<GeoPoint>> = MutableStateFlow(
-        listOf(
-            GeoPoint("точка 1", Location(48.0, 48.0)),
-            GeoPoint("точка 2", Location(49.0, 49.0)),
-            GeoPoint("точка 3", Location(50.0, 51.0)),
-        )
-    )
+    private val _pointsStateFlow = MutableStateFlow<List<GeoPoint>>(emptyList())
+    val pointsStateFlow = _pointsStateFlow.asStateFlow()
 
-    fun deletePoint(point: GeoPoint) {
-        TODO()
+    init {
+        loadPoints()
+    }
+
+    fun loadPoints() = viewModelScope.launch {
+        val points = geoPointsRepository.loadPoints()
+        _pointsStateFlow.value = points
+    }
+
+    fun deletePoint(pointName: String) = viewModelScope.launch {
+        geoPointsRepository.deletePoint(pointName)
     }
 }
