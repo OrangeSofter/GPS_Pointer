@@ -1,7 +1,10 @@
 package ru.upsoft.gpspointer.presentation.screens.points
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,23 +16,34 @@ fun SafePointDialog(
     viewModel: SavePointViewModel,
     navController: NavController,
 ) {
-    var inputText by remember { mutableStateOf("") }
+    val saveCurrentLocationAvailable by viewModel.saveCurrentLocationAvailableState.collectAsState()
+    val popBack by viewModel.popBackState.collectAsState()
+    var inputName by remember { mutableStateOf("") }
+    var inputCoordinates by remember { mutableStateOf("") }
 
+    if (popBack) remember { navController.popBackStack() }
     AlertDialog(
+        modifier = Modifier.fillMaxWidth(),
         onDismissRequest = {
             navController.popBackStack()
         },
         title = {
-            Text(text = "Title")
+            Text(text = "Добавление новой точки")
+            Spacer(modifier = Modifier.height(16.dp))
         },
         text = {
             Column {
                 TextField(
-                    value = inputText,
-                    onValueChange = { inputText = it }
+                    value = inputName,
+                    onValueChange = { inputName = it }
                 )
-                Text("Custom Text")
-                Checkbox(checked = false, onCheckedChange = {})
+                Text("Введите имя точки")
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = inputCoordinates,
+                    onValueChange = { inputCoordinates = it }
+                )
+                Text("Введите координаты точки")
             }
         },
         buttons = {
@@ -38,10 +52,24 @@ fun SafePointDialog(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { navController.popBackStack() }
+                    modifier = Modifier
+                        .fillMaxWidth(0.5F)
+                        .height(56.dp),
+                    enabled = viewModel.inputCoordinatesIsCorrect(inputCoordinates) && inputName.isNotBlank(),
+                    onClick = { viewModel.savePoint(inputName, inputCoordinates) }
                 ) {
-                    Text("Dismiss")
+                    Text("Сохранить")
+                }
+                if (saveCurrentLocationAvailable && inputName.isNotBlank()) {
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        onClick = { viewModel.savePointByCurrentLocation(inputName) }
+                    ) {
+                        Text("Сохранить по текущему положению")
+                    }
                 }
             }
         }

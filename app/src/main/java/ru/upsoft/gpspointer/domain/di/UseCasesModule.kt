@@ -8,15 +8,18 @@ import ru.upsoft.gpspointer.domain.usecase.navigation.NavigationUseCase
 import ru.upsoft.gpspointer.domain.usecase.navigation.NavigationUseCaseImpl
 import ru.upsoft.gpspointer.domain.usecase.weather.WeatherUseCase
 import ru.upsoft.gpspointer.domain.usecase.weather.WeatherUseCaseImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface UseCasesModule {
 
     @Binds
+    @Singleton
     fun navigationUseCase(locationUseCase: NavigationUseCaseImpl): NavigationUseCase
 
     @Binds
+    @Singleton
     fun weatherUseCase(weatherUseCase: WeatherUseCaseImpl): WeatherUseCase
 
 }

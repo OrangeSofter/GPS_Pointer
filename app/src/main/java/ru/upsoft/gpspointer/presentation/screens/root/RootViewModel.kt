@@ -37,7 +37,7 @@ class RootViewModel @Inject constructor(
     }
 
     fun onStop() {
-        stopLocationMonitoring()
+
     }
 
     fun onSelectPoint(pointName: String?) = viewModelScope.launch {
@@ -46,10 +46,6 @@ class RootViewModel @Inject constructor(
 
     fun startLocationMonitoring() = viewModelScope.launch {
         navigationUseCase.startNavigationMonitoring()
-    }
-
-    fun stopLocationMonitoring() = viewModelScope.launch {
-        navigationUseCase.stopNavigationMonitoring()
     }
 
     fun startWeatherMonitoring(newLocation: Location) {
