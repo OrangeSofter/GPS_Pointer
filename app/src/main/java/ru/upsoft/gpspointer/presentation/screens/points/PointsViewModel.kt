@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.upsoft.gpspointer.domain.model.GeoPoint
-import ru.upsoft.gpspointer.domain.repository.GeoPointsRepository
+import ru.upsoft.gpspointer.domain.usecase.navigation.NavigationUseCase
 import javax.inject.Inject
 
 
 @HiltViewModel
 class PointsViewModel @Inject constructor(
-    private val geoPointsRepository: GeoPointsRepository
+    private val navigationUseCase: NavigationUseCase
 ) : ViewModel() {
 
     private val _pointsStateFlow = MutableStateFlow<List<GeoPoint>>(emptyList())
@@ -24,11 +24,11 @@ class PointsViewModel @Inject constructor(
     }
 
     fun loadPoints() = viewModelScope.launch {
-        val points = geoPointsRepository.loadPoints()
+        val points = navigationUseCase.loadPoints()
         _pointsStateFlow.value = points
     }
 
     fun deletePoint(pointName: String) = viewModelScope.launch {
-        geoPointsRepository.deletePoint(pointName)
+        navigationUseCase.deletePoint(pointName)
     }
 }

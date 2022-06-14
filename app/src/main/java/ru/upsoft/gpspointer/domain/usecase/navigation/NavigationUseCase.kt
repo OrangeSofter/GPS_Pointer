@@ -26,6 +26,12 @@ interface NavigationUseCase {
 
     suspend fun onSelectPoint(pointName: String?)
 
+    suspend fun loadPoints(): List<GeoPoint>
+
+    suspend fun safePoint(point: GeoPoint)
+
+    suspend fun deletePoint(pointName: String)
+
 }
 
 class NavigationUseCaseImpl @Inject constructor(
@@ -65,6 +71,18 @@ class NavigationUseCaseImpl @Inject constructor(
         val points = geoPointsRepository.loadPoints()
         val selectedPoint = points.firstOrNull { it.name == pointName }
         selectedGeoPoint.value = selectedPoint
+    }
+
+    override suspend fun loadPoints(): List<GeoPoint> {
+        return geoPointsRepository.loadPoints()
+    }
+
+    override suspend fun safePoint(point: GeoPoint) {
+        geoPointsRepository.safePoint(point)
+    }
+
+    override suspend fun deletePoint(pointName: String) {
+        geoPointsRepository.deletePoint(pointName)
     }
 
     private suspend fun calculateSelectedPointState(

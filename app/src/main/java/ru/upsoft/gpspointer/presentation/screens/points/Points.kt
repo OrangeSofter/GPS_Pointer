@@ -1,5 +1,6 @@
 package ru.upsoft.gpspointer.presentation.screens.points
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.upsoft.gpspointer.domain.model.GeoPoint
+import ru.upsoft.gpspointer.presentation.Routes
 
 @Composable
 fun PointsScreen(
@@ -20,11 +22,10 @@ fun PointsScreen(
     navController: NavController,
 ) {
     val points = viewModel.pointsStateFlow.collectAsState()
-    Surface(
+    Column(
         Modifier.fillMaxSize(),
     ) {
         Text("Сохраненные точки")
-
         Surface(
             Modifier.absolutePadding(top = 16.dp)
         ) {
@@ -32,7 +33,10 @@ fun PointsScreen(
                 LazyColumn {
                     items(points.value, key = { it.name }) { point ->
                         PointItem(point) {
-                            navController.previousBackStackEntry?.savedStateHandle?.set("selectedPointName", point.name)
+                            navController.previousBackStackEntry?.savedStateHandle?.set(
+                                "selectedPointName",
+                                point.name
+                            )
                             navController.popBackStack()
                         }
                     }
@@ -40,6 +44,9 @@ fun PointsScreen(
             } else {
                 Text("Нет сохраненных точек")
             }
+        }
+        Button(onClick = { navController.navigate(Routes.SAVE_POINT_DIALOG) }) {
+            Text("Сохранить точку")
         }
 
     }
