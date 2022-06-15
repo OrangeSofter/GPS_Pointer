@@ -1,10 +1,11 @@
 package ru.upsoft.gpspointer.presentation.screens.points
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ fun PointsScreen(
     Column(
         Modifier.fillMaxSize(),
     ) {
-        Text("Сохраненные точки")
+        Text("Сохраненные точки", fontSize = 24.sp)
         Surface(
             Modifier.absolutePadding(top = 16.dp)
         ) {
@@ -51,7 +52,7 @@ fun PointsScreen(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.navigate(Routes.SAVE_POINT_DIALOG) }) {
-            Text("Сохранить точку")
+            Text("Сохранить точку", fontSize = 20.sp)
         }
 
     }
@@ -60,11 +61,19 @@ fun PointsScreen(
 
 @Composable
 fun PointItem(point: GeoPoint, onClick: () -> Unit) {
-    ClickableText(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp),
-        text = AnnotatedString(point.name),
-        style = TextStyle(fontSize = 24.sp)
-    ) { onClick() }
+    Surface(
+        Modifier
+            .clickable { onClick() }
+            .padding(4.dp),
+        color = MaterialTheme.colors.primaryVariant
+
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp),
+            text = AnnotatedString(point.name),
+            style = TextStyle(fontSize = 24.sp)
+        )
+    }
 }

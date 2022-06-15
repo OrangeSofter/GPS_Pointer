@@ -20,6 +20,8 @@ interface NavigationUseCase {
 
     val selectedPointState: Flow<SelectedPointState?>
 
+    val pointsState: StateFlow<List<GeoPoint>>
+
     fun startNavigationMonitoring()
 
     fun stopNavigationMonitoring()
@@ -56,6 +58,8 @@ class NavigationUseCaseImpl @Inject constructor(
             (compassState as? CompassState.Loaded)?.degree,
         )
     }
+
+    override val pointsState = geoPointsRepository.pointsState
 
     override fun startNavigationMonitoring() {
         locationRepository.startLocationMonitoring()
