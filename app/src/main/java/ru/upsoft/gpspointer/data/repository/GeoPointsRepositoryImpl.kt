@@ -9,12 +9,13 @@ import ru.upsoft.gpspointer.data.database.AppDatabase
 import ru.upsoft.gpspointer.data.mapper.toDomainModel
 import ru.upsoft.gpspointer.data.mapper.toEntity
 import ru.upsoft.gpspointer.domain.model.GeoPoint
+import ru.upsoft.gpspointer.domain.model.SimpleResult
 import ru.upsoft.gpspointer.domain.repository.GeoPointsRepository
 import javax.inject.Inject
 
 class GeoPointsRepositoryImpl @Inject constructor(
     @ApplicationContext context: Context
-) : GeoPointsRepository {//Todo: стоит ли выносить в другой дисретчер корутин
+) : GeoPointsRepository {
 
     private val db = Room.databaseBuilder(
         context,
@@ -23,12 +24,18 @@ class GeoPointsRepositoryImpl @Inject constructor(
 
     private val dao = db.pointsDao()
 
-    override suspend fun safePoint(point: GeoPoint) = withContext(Dispatchers.IO)  {
+    override suspend fun safePoint(point: GeoPoint): SimpleResult = withContext(Dispatchers.IO) {
         val entity = point.toEntity()
-        dao.insert(entity)
+        return@withContext try {
+            dao.insert(entity)
+            SimpleResult.SUCCESS
+        } catch (e: Exception) {
+            SimpleResult.FAILED
+        }
+
     }
 
-    override suspend fun deletePoint(pointName: String) = withContext(Dispatchers.IO)  {
+    override suspend fun deletePoint(pointName: String) = withContext(Dispatchers.IO) {
         dao.deleteByName(pointName)
     }
 

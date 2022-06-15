@@ -19,10 +19,6 @@ class PointsViewModel @Inject constructor(
     private val _pointsStateFlow = MutableStateFlow<List<GeoPoint>>(emptyList())
     val pointsStateFlow = _pointsStateFlow.asStateFlow()
 
-    init {
-        loadPoints()
-    }
-
     fun loadPoints() = viewModelScope.launch {
         val points = navigationUseCase.loadPoints()
         _pointsStateFlow.value = points

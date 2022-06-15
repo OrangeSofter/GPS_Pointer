@@ -3,13 +3,18 @@ package ru.upsoft.gpspointer.presentation.screens.points
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import ru.upsoft.gpspointer.domain.model.GeoPoint
 import ru.upsoft.gpspointer.presentation.Routes
@@ -20,6 +25,7 @@ fun PointsScreen(
     navController: NavController,
 ) {
     val points = viewModel.pointsStateFlow.collectAsState()
+    remember { viewModel.loadPoints() }// Todo: Загрузка по возвращению с диалога
     Column(
         Modifier.fillMaxSize(),
     ) {
@@ -43,7 +49,7 @@ fun PointsScreen(
                 Text("Нет сохраненных точек")
             }
         }
-        Spacer(modifier = Modifier.fillMaxWidth())
+        Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.navigate(Routes.SAVE_POINT_DIALOG) }) {
             Text("Сохранить точку")
         }
@@ -54,7 +60,11 @@ fun PointsScreen(
 
 @Composable
 fun PointItem(point: GeoPoint, onClick: () -> Unit) {
-    Button(onClick = onClick) {
-        Text(point.name)
-    }
+    ClickableText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp),
+        text = AnnotatedString(point.name),
+        style = TextStyle(fontSize = 24.sp)
+    ) { onClick() }
 }

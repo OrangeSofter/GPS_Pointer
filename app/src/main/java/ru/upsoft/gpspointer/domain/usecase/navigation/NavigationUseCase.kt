@@ -28,7 +28,7 @@ interface NavigationUseCase {
 
     suspend fun loadPoints(): List<GeoPoint>
 
-    suspend fun safePoint(point: GeoPoint)
+    suspend fun safePoint(point: GeoPoint): SimpleResult
 
     suspend fun deletePoint(pointName: String)
 
@@ -77,8 +77,8 @@ class NavigationUseCaseImpl @Inject constructor(
         return geoPointsRepository.loadPoints()
     }
 
-    override suspend fun safePoint(point: GeoPoint) {
-        geoPointsRepository.safePoint(point)
+    override suspend fun safePoint(point: GeoPoint): SimpleResult {
+        return geoPointsRepository.safePoint(point)
     }
 
     override suspend fun deletePoint(pointName: String) {

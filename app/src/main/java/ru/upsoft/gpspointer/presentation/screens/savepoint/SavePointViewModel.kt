@@ -9,6 +9,7 @@ import ru.upsoft.gpspointer.common.sendLog
 import ru.upsoft.gpspointer.domain.model.GeoPoint
 import ru.upsoft.gpspointer.domain.model.Location
 import ru.upsoft.gpspointer.domain.model.LocationState
+import ru.upsoft.gpspointer.domain.model.SimpleResult
 import ru.upsoft.gpspointer.domain.usecase.navigation.NavigationUseCase
 import javax.inject.Inject
 
@@ -32,18 +33,36 @@ class SavePointViewModel @Inject constructor(
     private val _popBackState = MutableStateFlow(false)
     val popBackState = _popBackState.asStateFlow()
 
+    private val _errorState = MutableStateFlow<String?>(null)
+    val errorState = _errorState.asStateFlow()
+
 
     fun savePoint(pointName: String, coordinates: String) = viewModelScope.launch {
         val location = parseInputCoordinates(coordinates) ?: return@launch
-        navigationUseCase.safePoint(GeoPoint(pointName, location))
-        _popBackState.value = true
+        val result = navigationUseCase.safePoint(GeoPoint(pointName, location))
+        when (result) {
+            SimpleResult.SUCCESS -> {
+                _popBackState.value = true
+            }
+            SimpleResult.FAILED -> {
+                _errorState.value = "Ошибка сохранения точки"
+            }
+        }
     }
 
     fun savePointByCurrentLocation(pointName: String) = viewModelScope.launch {
         val state = (navigationUseCase.locationStateFlow.value as? LocationState.LocationRetrieved)
             ?: return@launch
-        navigationUseCase.safePoint(GeoPoint(pointName, state.location))
-        _popBackState.value = true
+        val result = navigationUseCase.safePoint(GeoPoint(pointName, state.location))
+        when (result) {
+            SimpleResult.SUCCESS -> {
+                _popBackState.value = true
+            }
+            SimpleResult.FAILED -> {
+                _errorState.value = "Ошибка сохранения точки"
+            }
+        }
+
     }
 
     fun inputCoordinatesIsCorrect(coordinates: String): Boolean =
